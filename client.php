@@ -311,6 +311,15 @@ class MTGNetConnection
         $this->transport->Disconnect();
     }
 
+    public function SubmitCallBatch($batch)
+    {
+        $requestData = json_encode($batch);
+        $this->transport->SendMessage($requestData);
+
+        $response = json_decode($this->transport->ReadMessage());
+        return $response;
+    }
+
     public function InvokeRPCMethod($callId, $service, $method, $args)
     {
         $callobj = Array(
@@ -319,11 +328,7 @@ class MTGNetConnection
             'Id' => $callId,
             'Args' => $args
         );
-        $requestData = json_encode(Array($callobj));
-        $this->transport->SendMessage($requestData);
-
-        $response = json_decode($this->transport->ReadMessage());
-        return $response;
+        return $this->SubmitCallBatch(Array($callobj));
     }
 }
 
