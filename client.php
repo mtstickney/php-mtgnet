@@ -207,10 +207,12 @@ class NetstringPlusAPI {
     /* Write a modified netstring to $stream with a payload of $data. */
     public static function WriteNetstringBytes($stream, $data)
     {
-        // FIXME: these don't seem to be buffered.
-        fwrite($stream, NetstringPlusAPI::NetstringHeader($data));
-        fwrite($stream, $data);
-        fwrite($stream, "\n");
+        // FIXME: For large payloads, concatenation performs
+        // poorly. However, PHP appears not to allow write buffering
+        // on sockets, so for smaller payloads concatenation in-memory
+        // is better than sending three separate packets.
+        $outData = NetstringPlusAPI::NetstringHeader($data) . $data . "\n";
+        fwrite($stream, $outData);
         fflush($stream);
     }
 
