@@ -1,0 +1,49 @@
+* php-mtgnet
+
+  php-mtgnet is a client library for the [[https://github.com/mtstickney/mtgnet-spec/blob/master/specification/spec.org][MTGNet]] RPC protocol written
+  in PHP, including the optional [[https://github.com/mtstickney/mtgnet-encryption][encryption extension]]. It depends on
+  the [[https://github.com/jedisct1/libsodium-php][libsodium-php]] extension, and requires the =sockets= builtin
+  extension to be enabled.
+
+* Status
+  The client is currently functional, but has some limitations. APIs
+  may change somewhat in the future.
+
+* Usage
+#+begin_src php
+  /*** Core protocol ***/
+
+  $transport = new TcpTransport("localhost", 9000);
+  $con = new MTGNetConnection($transport);
+
+  $con->Connect();
+  $result = $con->InvokeRPCMethod(123, "System", "Version", Array());
+  echo $result['Data']; // => "1.0"
+
+  $con->Disconnect();
+
+  /*** Encrypted connections ***/
+
+  $transport = new TcpTransport("localhost", 9000);
+
+  // A utility for generating secret keys encoded for storage is included.
+  $encodedSecret = EncryptedMTGNetConnection::GenerateEncodedSecret();
+  $secret = EncryptedMTGNetConnection::DecodeSecret($encodedSecret);
+
+  $con = new EncryptedMTGNetConnection($transport, $secret, null);
+  $con->Connect();
+  $result = $con->InvokeRPCMethod(123, "System", "Version", Array());
+  echo $result['Data']; // => "1.0"
+  $con->Disconnect();
+#+end_src
+
+* Limitations
+  - The client currently uses blocking reads and writes, with no
+    timeout.
+  - The client only supports one outstanding request at a time
+    (request batches are supported).
+  - The socket transport uses a non-portable value to set the
+    =TCP_KEEPIDLE= option, since PHP doesn't have this constant yet.
+  - Sockets aren't persistent and may or may not play well with your
+    server execution environment. You're on your own for that one.
+  - May not use your favorite coding style or abstractions. Sorry.
