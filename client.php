@@ -296,6 +296,16 @@ class MTGNetConnection
 {
     protected $transport;
 
+    public static function CallObj($id, $service, $method, $args)
+    {
+        return Array(
+            'Id': $id,
+            'Service': $service,
+            'Method': $method,
+            'Args': $args
+        );
+    }
+
     public function __construct($transport)
     {
         $this->transport = $transport;
