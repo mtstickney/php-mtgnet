@@ -299,10 +299,10 @@ class MTGNetConnection
     public static function CallObj($id, $service, $method, $args)
     {
         return Array(
-            'Id': $id,
-            'Service': $service,
-            'Method': $method,
-            'Args': $args
+            'Id' => $id,
+            'Service' => $service,
+            'Method' => $method,
+            'Args' => $args
         );
     }
 
