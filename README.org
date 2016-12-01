@@ -20,6 +20,14 @@
   $result = $con->InvokeRPCMethod(123, "System", "Version", Array());
   echo $result['Data']; // => "1.0"
 
+  // Multiple calls can be submitted at once.
+  $batch = Array(
+      MTGNetConnection::CallObj(123, "System", "Version", Array());
+      MTGNetConnection::CallObj(456, "System", "Methods", Array());
+  );
+  // $results has a response for each submitted object (order is not preserved).
+  $results = $con->SubmitCallBatch($batch);
+
   $con->Disconnect();
 
   /*** Encrypted connections ***/
