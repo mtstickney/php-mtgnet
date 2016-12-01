@@ -5,6 +5,9 @@
   the [[https://github.com/jedisct1/libsodium-php][libsodium-php]] extension, and requires the =sockets= builtin
   extension to be enabled.
 
+* License
+  BSD 2-clause.
+
 * Status
   The client is currently functional, but has some limitations. APIs
   may change somewhat in the future.
