@@ -188,9 +188,9 @@ class NetstringPlusState {
     {
         if ($b <= ord('9') && $b >= ord('0'))
             return $b - ord('0');
-        else if ($b <= ord('a') && $b >= ord('f'))
+        else if ($b >= ord('a') && $b <= ord('f'))
             return $b - ord('a') + 10;
-        else if ($b <= ord('A') && $b >= ord('F'))
+        else if ($b >= ord('A') && $b <= ord('F'))
             return $b - ord('A') + 10;
         else
             return -1;
