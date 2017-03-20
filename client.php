@@ -326,7 +326,7 @@ class MTGNetConnection
         $requestData = json_encode($batch);
         $this->transport->SendMessage($requestData);
 
-        $response = json_decode($this->transport->ReadMessage());
+        $response = json_decode($this->transport->ReadMessage(), true);
         return $response;
     }
 
@@ -418,7 +418,18 @@ class EncryptedMTGNetConnection extends MTGNetConnection
 
         $encryptedResponseData = $this->transport->ReadMessage();
         $responseData = $this->DecryptData($encryptedResponseData);
-        return json_decode($responseData);
+        return json_decode($responseData, true);
+    }
+
+    public function SubmitCallBatch($batch)
+    {
+        $requestData = json_encode($batch);
+        $encrypted = $this->EncryptData($requestData);
+        $this->transport->SendMessage($encrypted);
+
+        $encryptedResponseData = $this->transport->ReadMessage();
+        $responseData = $this->DecryptData($encryptedResponseData);
+        return json_decode($responseData, true);
     }
 
     private function EncryptData($data)
