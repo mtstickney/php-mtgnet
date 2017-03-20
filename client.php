@@ -421,6 +421,17 @@ class EncryptedMTGNetConnection extends MTGNetConnection
         return json_decode($responseData);
     }
 
+    public function SubmitCallBatch($batch)
+    {
+        $requestData = json_encode($batch);
+        $encrypted = $this->EncryptData($requestData);
+        $this->transport->SendMessage($encrypted);
+
+        $encryptedResponseData = $this->transport->ReadMessage();
+        $responseData = $this->DecryptData($encryptedResponseData);
+        return json_decode($responseData, true);
+    }
+
     private function EncryptData($data)
     {
         $nonce = \Sodium\randombytes_buf(\Sodium\CRYPTO_BOX_NONCEBYTES);
